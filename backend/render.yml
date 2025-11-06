@@ -5,6 +5,8 @@ services:
     buildCommand: "./build.sh"
     startCommand: "gunicorn core.wsgi:application"
     envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: false   # Don't write value to repo
       - key: DATABASE_URL
         fromDatabase:
           name: my-db
