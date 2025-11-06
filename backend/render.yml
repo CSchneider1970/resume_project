@@ -3,7 +3,7 @@ services:
     name: resume_project
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn core.wsgi:application"
+    startCommand: "gunicorn core.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DJANGO_SECRET_KEY
         sync: false   # Don't write value to repo
