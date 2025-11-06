@@ -4,6 +4,7 @@ services:
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn core.asgi:application -k uvicorn.workers.UvicornWorker"
+    workingDirectory: backend
     envVars:
       - key: DJANGO_SECRET_KEY
         sync: false   # Don't write value to repo
