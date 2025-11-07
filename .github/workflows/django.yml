@@ -40,7 +40,7 @@ jobs:
 
     - name: Run tests
       env:
-        DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db?sslmode=require
+        DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db
         POSTGRES_DB: test_db
         POSTGRES_USER: test_user
         POSTGRES_PASSWORD: test_pass
