@@ -27,6 +27,12 @@ services:
         fromDatabase:
           name: my-db
           property: connectionString
+      - key: DJANGO_SETTINGS_MODULE
+        value: core.settings
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
       - key: REDIS_URL
         fromService:
           name: my-redis
