@@ -8,14 +8,14 @@ services:
     envVars:
       - key: DJANGO_SECRET_KEY
         sync: false   # Don't write value to repo
-      - key: DATABASE_URL
-        fromDatabase:
-          name: my-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: my-redis
-          type: redis
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: my-db
+      #     property: connectionString
+      # - key: REDIS_URL
+      #   fromService:
+      #     name: my-redis
+      #     type: redis
 
   - type: worker
     name: celery-worker
@@ -23,10 +23,10 @@ services:
     buildCommand: "./build.sh"
     startCommand: "celery -A core worker --loglevel=info"
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: my-db
-          property: connectionString
+      # - key: DATABASE_URL
+      #   fromDatabase:
+      #     name: my-db
+      #     property: connectionString
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
       - key: CELERY_BROKER_URL
@@ -38,12 +38,12 @@ services:
           name: my-redis
           type: redis
 
-databases:
-  - name: my-db
-    plan: free
+# databases:
+#   - name: my-db
+#     plan: free
 
-services:
-  - type: redis
-    name: my-redis
-    ipAllowList: []
-    plan: free
+# services:
+#   - type: redis
+#     name: my-redis
+#     ipAllowList: []
+#     plan: free
