@@ -54,6 +54,9 @@ class ResumeSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
 
+        '''
+        For testing disabled to avoid data loss
+
         # Clear old related objects
         instance.job_history.all().delete()
         instance.skills.all().delete()
@@ -66,5 +69,22 @@ class ResumeSerializer(serializers.ModelSerializer):
             Skill.objects.create(resume=instance, **skill)
         for education in education_history_data:
             EducationHistory.objects.create(resume=instance, **education)
+        '''
+
+        # Delete only and recreate if data is provided
+        if job_history_data is not None:
+            instance.job_history.all().delete()
+            for job in job_history_data:
+                JobHistory.objects.create(resume=instance, **job)
+
+        if skills_data is not None:
+            instance.skills.all().delete()
+            for skill in skills_data:
+                Skill.objects.create(resume=instance, **skill)
+
+        if education_history_data is not None:
+            instance.education_history.all().delete()
+            for education in education_history_data:
+                EducationHistory.objects.create(resume=instance, **education)
 
         return instance
