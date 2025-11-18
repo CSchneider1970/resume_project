@@ -4,19 +4,19 @@ from .models import EducationHistory, JobHistory, Resume, Skill
 class EducationHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EducationHistory
-        fields = ('name', 'qualification')
+        fields = ('institution', 'degree', 'start_date', 'end_date')
 
 
 class JobHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = JobHistory
-        fields = ('job_title', 'description', 'start_date', 'end_date')
+        fields = ('job_title', 'company', 'description', 'start_date', 'end_date')
 
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
-        fields = ('name', 'rating')
+        fields = ('name', 'skill_level')
 
 
 class ResumeSerializer(serializers.ModelSerializer):
@@ -26,7 +26,11 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resume
-        fields = ('id', 'user', 'name', 'bio', 'skills', 'address', 'job_history', 'education_history')
+        fields = (
+            'id', 'user', 'title', 'bio', 'address',
+            'job_history_order', 'skills_order', 'education_history_order',
+            'skills', 'job_history', 'education_history'
+        )
 
     def create(self, validated_data):
         education_history_data = validated_data.pop('education_history', [])
@@ -88,3 +92,32 @@ class ResumeSerializer(serializers.ModelSerializer):
                 EducationHistory.objects.create(resume=instance, **education)
 
         return instance
+
+    def to_representation(self, instance):
+        # Get the default representation
+        data = super().to_representation(instance)
+
+        # Collect sections with their order
+        sections = [
+            ("job_history", data["job_history"], instance.job_history_order),
+            ("skills", data["skills"], instance.skills_order),
+            ("education_history", data["education_history"], instance.education_history_order),
+        ]
+
+        # Sort sections based on the stored order
+        ordered_sections = sorted(sections, key=lambda x: x[2])
+
+        # Create a new ordered representation
+        ordered_data = {
+            "id": data["id"],
+            "user": data["user"],
+            "title": data["title"],
+            "bio": data["bio"],
+            "address": data["address"],
+        }
+
+        for key, value, _ in ordered_sections:
+            ordered_data[key] = value
+
+        return ordered_data
+    
