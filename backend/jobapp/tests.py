@@ -13,7 +13,7 @@ class ResumeAPITestCase(APITestCase):
         self.user2 = User.objects.create_user(username="karl", password="password")
         self.resume = Resume.objects.create(
             user=self.user1,
-            name="Horst Hrubesch",
+            title="Horst Hrubesch",
             bio="Footballer and Coach",
             address="HSV",
         )
@@ -52,7 +52,7 @@ class ResumeAPITestCase(APITestCase):
         response = self.client.post(
             "/api/v3/resumes/",
             {
-                "name": "Karl-Heinz Rummenigge",
+                "title": "Karl-Heinz Rummenigge",
                 "bio": "Footballer and Executive",
                 "address": "Munich",
             },
